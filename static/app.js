@@ -7,11 +7,8 @@ var receipt_json = function(receipt) {
 };
 
 
-var sample_receipt = 'eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJwcm9kdWN0IjogeyJ1cmwiOiAiaHR0cHM6Ly93d3cubW96aWxsYS5vcmciLCAic3RvcmVkYXRhIjogIjUxNjkzMTQzNTYifSwgInJlaXNzdWUiOiAiaHR0cDovL21vY2hpLnRlc3Q6ODg4OC9yZWlzc3VlLzUxNjkzMTQzNTYiLCAidXNlciI6IHsidHlwZSI6ICJkaXJlY3RlZC1pZGVudGlmaWVyIiwgInZhbHVlIjogIjRmYjM1MTUxLTJiOWItNGJhMi04MjgzLWM0OWQzODE2NDBiZCJ9LCAidmVyaWZ5IjogImh0dHA6Ly9tb2NoaS50ZXN0Ojg4ODgvdmVyaWZ5LzUxNjkzMTQzNTYiLCAiaXNzIjogImh0dHA6Ly9tb2NoaS50ZXN0Ojg4ODgiLCAiaWF0IjogMTMxMzYwMTg4LCAidHlwIjogInB1cmNoYXNlLXJlY2VpcHQiLCAibmJmIjogMTMxMzYwMTg1LCAiZGV0YWlsIjogImh0dHA6Ly9tb2NoaS50ZXN0Ojg4ODgvcmVjZWlwdC81MTY5MzE0MzU2In0.eZpTEnCLUR3iP3rm9WyJOqx1k66mQaAxqcrvX11r5E0';
-
-
 var install = function(ev) {
-  var manifest_url = "http://localhost:9123/manifest.webapp";
+  var manifest_url = "https://receipts-example.paas.allizom.org/manifest.webapp";
   navigator.mozApps.install(manifest_url);
   ev.preventDefault();
 };
@@ -23,6 +20,7 @@ var message = function(message) {
   msg.innerHTML = message;
   window.setTimeout(hide_message, 2000);
 };
+
 
 var hide_message = function() {
   var msg = $('#receipt-message');
@@ -58,6 +56,7 @@ var add = function(ev) {
 
   ev.preventDefault();
 };
+
 
 var remove = function(ev) {
   var apps = window.navigator.mozApps.getSelf();
@@ -159,6 +158,7 @@ var list = function() {
       };
     };
 };
+
 
 $(document).ready(function() {
   var apps = window.navigator.mozApps.getSelf();
