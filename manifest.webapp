@@ -1,0 +1,10 @@
+{
+    "name": "Receipts Example",
+    "default_locale": "en-US",
+    "description": "Example receipts",
+    "icons": {
+        "64": "/static/img/feeds-64.png"
+    },
+    "launch_path": "/",
+    "locales": {}
+}
