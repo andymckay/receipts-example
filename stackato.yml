@@ -1,0 +1,5 @@
+name: receipts-example
+framework:
+    type: generic
+processes:
+    web: python -m server $PORT
