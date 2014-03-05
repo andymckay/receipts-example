@@ -5,6 +5,7 @@
   <link href="static/bootstrap/bootstrap.css" rel="stylesheet">
   <link href="static/bootstrap/bootstrap-theme.css" rel="stylesheet">
   <script src="static/jquery-1.11.0.min.js"></script>
+  <script src="static/receiptverifier.js"></script>
   <script src="static/app.js"></script>
   <style>
     #receipt-list { margin-top: 1em; }
@@ -25,8 +26,16 @@
     <section class="container" id="receipt-list">
     </section>
 
-    <section class="container">
-      <button id="add" class="btn btn-success hidden">Add Receipt</button>
+    <section class="container hidden" id="receipt-add">
+      <p>Add a receipt:</p>
+      <div class="btn-group">
+        <button class="add btn btn-default" data-type="ok">Good</button>
+        <button class="add btn btn-default" data-type="expired">Expired</button>
+        <button class="add btn btn-default" data-type="invalid">Invalid</button>
+        <button class="add btn btn-default" data-type="refunded">Refunded</button>
+      </div>
+      <hr>
+      <button id="verify" class="btn btn-info">Verify</button>
     </section>
   </body>
 </html>

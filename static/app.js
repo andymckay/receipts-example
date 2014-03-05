@@ -8,7 +8,7 @@ var receipt_json = function(receipt) {
 
 
 var install = function(ev) {
-  var manifest_url = "https://receipts-example.paas.allizom.org/manifest.webapp";
+  var manifest_url = window.location.href + 'manifest.webapp';
   navigator.mozApps.install(manifest_url);
   ev.preventDefault();
 };
@@ -16,25 +16,27 @@ var install = function(ev) {
 
 var message = function(message) {
   var msg = $('#receipt-message');
-  msg.classList.remove('hidden');
-  msg.innerHTML = message;
+  msg.removeClass('hidden');
+  msg.html(message);
   window.setTimeout(hide_message, 2000);
 };
 
 
 var hide_message = function() {
   var msg = $('#receipt-message');
-  msg.classList.add('hidden');
+  msg.addClass('hidden');
 };
 
 
 var add = function(ev) {
+  var type = this.dataset.type;
+  console.log('[receipt] add: ' + type);
   $.ajax({
     type: 'POST',
     url: 'https://marketplace.firefox.com/api/v1/receipts/test/',
     dataType: 'json',
-    data: {'manifest_url': 'http://test-add.app/',
-           'receipt_type': 'ok'}
+    data: {'manifest_url': 'http://test.app/',
+           'receipt_type': type}
   }).done(function(data) {
     var apps = window.navigator.mozApps.getSelf();
     apps.onsuccess = function(o) {
@@ -87,7 +89,7 @@ var replace = function(ev) {
     type: 'POST',
     url: 'https://marketplace.firefox.com/api/v1/receipts/test/',
     dataType: 'json',
-    data: {'manifest_url': 'http://test-replace.app/',
+    data: {'manifest_url': 'http://test.app/',
            'receipt_type': 'ok'}
   }).done(function(data) {
     console.log('[receipt] got it');
@@ -140,15 +142,14 @@ var list = function() {
         // Show the receipts.
         for (var k = 0; k < apps.result.receipts.length; k++) {
           var receipt = apps.result.receipts[k];
-          console.log(receipt);
           var rc = receipt_json(receipt);
           dest.appendChild(document.createElement('p'));
           var p = dest.querySelector('p:last-child');
           p.classList.add('well');
           p.innerHTML =
-            '<b>Status:</b> <span class="label label-warning">Unknown status</span><br>' +
             '<b>Type:</b> ' + rc.typ + '<br>' +
-            '<b>URL:</b> ' + rc.product.url + '<br><br>' +
+            '<b>URL:</b> ' + rc.product.url + '<br>' +
+            '<b>Verify:</b> ..' + rc.verify.split('receipts').pop() + '<br><br>' +
             '<button class="btn btn-danger remove" data-receipt="' + receipt + '">Uninstall</button> ' +
             '<button class="btn btn-warning replace" data-receipt="' + receipt + '">Replace</button>';
         };
@@ -160,6 +161,25 @@ var list = function() {
 };
 
 
+var verify = function() {
+  var verifier = new mozmarket.receipts.Verifier({
+    // Because we are using the API which only returns test-receipts
+    // we have to explicitly allow this.
+    typsAllowed: ['test-receipt']
+  });
+  message('Verifying receipts.');
+  verifier.clearCache();
+  console.log('[receipt] clearing cache');
+  verifier.verify(function(verifier) {
+    if (verifier.state instanceof verifier.states.OK) {
+      message('Receipts verified.');
+    } else {
+      message('<b>Failed:</b> ' + verifier.state.detail);
+    };
+  });
+};
+
+
 $(document).ready(function() {
   var apps = window.navigator.mozApps.getSelf();
   apps.onsuccess = function(o) {
@@ -167,7 +187,9 @@ $(document).ready(function() {
       $('#install').removeClass('hidden');
       $('#install button').on('click', install)
     } else {
-      $('#add').on('click', add).removeClass('hidden');
+      $('#receipt-add').removeClass('hidden');
+      $('.add').on('click', add);
+      $('#verify').on('click', verify);
       list();
     }
   }
